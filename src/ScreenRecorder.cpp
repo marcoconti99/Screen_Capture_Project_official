@@ -9,6 +9,33 @@ ScreenRecorder::ScreenRecorder()
 	cout<<"\nall required functions are registered successfully";
 }
 
+ScreenRecorder::~ScreenRecorder()
+{
+
+	avformat_close_input(&pAVFormatContext);
+	if( !pAVFormatContext )
+	{
+		cout<<"\nfile closed sucessfully";
+	}
+	else
+	{
+		cout<<"\nunable to close the file";
+		exit(1);
+	}
+
+	avformat_free_context(pAVFormatContext);
+	if( !pAVFormatContext )
+	{
+		cout<<"\navformat free successfully";
+	}
+	else
+	{
+		cout<<"\nunable to free avformat context";
+		exit(1);
+	}
+
+}
+
 
 
 int ScreenRecorder::openCamera()
@@ -93,6 +120,9 @@ int ScreenRecorder::openCamera()
 	  cout<<"\nunable to open the av codec";
 	  exit(1);
 	}
+    
+
+    return 0;
 }
 
 
@@ -205,6 +235,9 @@ int ScreenRecorder::init_outputfile()
 	cout<<"\n\nOutput file information :\n\n";
 	av_dump_format(outAVFormatContext , 0 ,output_file ,1);
 	*/
+
+
+return 0;
 }
 
 int ScreenRecorder::CaptureVideoFrames()
@@ -335,5 +368,8 @@ cin>>no_frames;
 //THIS WAS ADDED LATER
 av_free(video_outbuf);
 
+
+
+return 0;
 }
 
