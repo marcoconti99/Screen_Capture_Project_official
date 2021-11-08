@@ -1,0 +1,1 @@
+g++ -g $(pkg-config --cflags libavcodec libavformat libavutil libswscale libavdevice libswresample  libswscale) -pthread Screen_Capture_Project/src/ScreenRecorder.cpp Screen_Capture_Project/src/main.cpp  $(pkg-config --libs libavcodec libavformat libswscale libavdevice libavutil libswresample  libswscale) 
