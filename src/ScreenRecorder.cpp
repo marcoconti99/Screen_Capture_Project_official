@@ -256,7 +256,7 @@ int ScreenRecorder::CaptureVideoFrames()
 		                pAVCodecContext->height,
 		                pAVCodecContext->pix_fmt,
 		                outAVCodecContext->width,
-				outAVCodecContext->height,
+				       outAVCodecContext->height,
 		                outAVCodecContext->pix_fmt,
 		                SWS_BICUBIC, NULL, NULL, NULL);
 
@@ -276,27 +276,38 @@ cin>>no_frames;
 	if( ii++ == no_frames )break;
 		if(pAVPacket->stream_index == VideoStreamIndx)
 		{
-			value = avcodec_decode_video2( pAVCodecContext , pAVFrame , &frameFinished , pAVPacket );
+			value = avcodec_send_packet( pAVCodecContext ,  pAVPacket );
 			if( value < 0)
 			{
 				cout<<"unable to decode video";
 			}
+            //pAVFrame , &frameFinished ,
+           frameFinished =  avcodec_receive_frame(pAVCodecContext, pAVFrame);
 
 			if(frameFinished)// Frame successfully decoded :)
 			{
 				sws_scale(swsCtx_, pAVFrame->data, pAVFrame->linesize,0, pAVCodecContext->height, outFrame->data,outFrame->linesize);
-				av_init_packet(&outPacket);
+				
 				outPacket.data = NULL;    // packet data will be allocated by the encoder
 				outPacket.size = 0;
 
-				avcodec_encode_video2(outAVCodecContext , &outPacket ,outFrame , &got_picture);
+				//avcodec_encode_video2(outAVCodecContext , &outPacket ,outFrame , &got_picture);
+                avcodec_send_frame(outAVCodecContext, outFrame);
+               got_picture = avcodec_receive_packet(outAVCodecContext, &outPacket);
 
 				if(got_picture)
 				{
+
+                    //MODIFICA
+                   // AVCodecParameters *outAVCodecParams = video_st->codecpar;
+                    //AVCodec *outAVLocalCodec = avcodec_find_decoder(outAVCodecParams->codec_id);
+                   // AVCodecContext *outAVCodecContext = avcodec_alloc_context3(outAVLocalCodec);
+                    //MODIFICA
+
 					if(outPacket.pts != AV_NOPTS_VALUE)
-						outPacket.pts = av_rescale_q(outPacket.pts, video_st->codec->time_base, video_st->time_base);
+						outPacket.pts = av_rescale_q(outPacket.pts,  video_st->time_base, video_st->time_base);
 					if(outPacket.dts != AV_NOPTS_VALUE)
-						outPacket.dts = av_rescale_q(outPacket.dts, video_st->codec->time_base, video_st->time_base);
+						outPacket.dts = av_rescale_q(outPacket.dts, video_st->time_base, video_st->time_base);
 				
 					printf("Write frame %3d (size= %2d)\n", j++, outPacket.size/1000);
 					if(av_write_frame(outAVFormatContext , &outPacket) != 0)
