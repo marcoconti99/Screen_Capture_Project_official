@@ -1,21 +1,50 @@
+#include <iostream>
+#include <thread>
+#include "ScreenRecorder.h"
 
-#include "../include/ScreenRecorder.h"
+#ifdef __APPLE__
+#include <unistd.h>
+#endif
 
-using namespace std;
+#ifdef __unix__
+#include <unistd.h>
+#endif
 
-/* driver function to run the application */
-int main()
-{
-	
-    
-	ScreenRecorder screen_record;
+#ifdef _WIN32
+#include <windows.h>
+void sleep(unsigned milliseconds)
+ {
+    std::this_thread::sleep_for(std::chrono::seconds(milliseconds));
+ }
+#endif
 
-	screen_record.openCamera();
-	screen_record.init_outputfile();
-	screen_record.CaptureVideoFrames();
+int main() {
+    ScreenRecorder sc;
 
-	cout<<"\nprogram executed successfully\n";
+    /*settings*/
+    sc.settings.filename = "output.mp4";
+    sc.settings._recaudio = true; //da attivare quando risolvi video
+    sc.settings._recvideo = true;
 
-return 0;
+    sc.settings._inscreenres = {1920,1080};
+    sc.settings._outscreenres = {1920,1080};
+    sc.settings._fps = 30;
+    sc.settings._screenoffset = {0,0};
+
+    /*open input devices*/
+    sc.openVideoSource();
+    sc.openAudioSource();
+
+    /*init data structures and threads based on settings*/
+    sc.initOutputFile();
+	sc.initThreads();
+
+
+
+    /* sample capture routine*/
+  	 sc.startCapture();
+  	  sleep(5);
+   	 sc.endCapture();
+
+    return 0;
 }
-
