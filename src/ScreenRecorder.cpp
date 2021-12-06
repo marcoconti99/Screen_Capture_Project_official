@@ -41,23 +41,23 @@ ScreenRecorder::~ScreenRecorder() {
     }
     avformat_free_context(inVFormatContext);
     if (!inVFormatContext) {
-        cout << "\navformat free successfully";
+        cout << "\n[IN_V] avformat free successfully";
     } else {
-        cout << "\nunable to free avformat context";
+        cout << "\nunable to free avformat context [IN_VIDEO]";
         exit(1);
     }
     avformat_free_context(inAFormatContext);
     if (!inAFormatContext) {
-        cout << "\navformat free successfully";
+        cout << "\n[IN_A]avformat free successfully";
     } else {
-        cout << "\nunable to free avformat context";
+        cout << "\nunable to free avformat context [IN_AUDIO]";
         exit(1);
     }
     avformat_free_context(outAVFormatContext);
     if (!outAVFormatContext) {
         cout << "\navformat free successfully";
     } else {
-        cout << "\nunable to free avformat context";
+        cout << "\nunable to free avformat context [OUT_AV] ";
         exit(1);
     }
 }
@@ -400,7 +400,7 @@ void ScreenRecorder::generateAudioOutputStream(){
         }
 
     avcodec_parameters_from_context(outAVFormatContext->streams[outAudioStreamIndex]->codecpar, outACodecContext);
-
+    cout<<"[generateAudioOutputStream] exiting\n";
 }
 
 void ScreenRecorder::initOptions() {
@@ -588,8 +588,7 @@ void ScreenRecorder::captureVideo(){
                     if(av_interleaved_write_frame(outAVFormatContext , outPacket) != 0)
                     {
                         cout<<"\nerror in writing video frame";
-                    }else cout<<"\nSAVING IN THE BUFFER\n";
-
+                    }
                     w_lock.unlock();
                     av_packet_unref(outPacket);
                 } // got_picture
@@ -739,7 +738,7 @@ void ScreenRecorder::captureAudio() {
                         if(av_interleaved_write_frame(outAVFormatContext , outPacket) != 0)
                         {
                             cout<<"\nerror in writing audio frame";
-                        }
+                        }else  cout<<"\n writing audio frame";
                         w_lock.unlock();
                         av_packet_unref(outPacket);
                     }

@@ -26,8 +26,12 @@ int main() {
     sc.settings._recaudio = true; //da attivare quando risolvi video
     sc.settings._recvideo = true;
 
-    sc.settings._inscreenres = {1920,1080};
-    sc.settings._outscreenres = {1920,1080};
+    //sc.settings._inscreenres = {1920,1080};
+    sc.settings._inscreenres = {1440,900};
+    //sc.settings._outscreenres = {1920,1080};
+    sc.settings._outscreenres = {1440,900};
+
+    
     sc.settings._fps = 30;
     sc.settings._screenoffset = {0,0};
 
@@ -43,7 +47,7 @@ int main() {
 
     /* sample capture routine*/
   	 sc.startCapture();
-  	  sleep(5);
+  	  sleep(10);
    	 sc.endCapture();
 
     return 0;
