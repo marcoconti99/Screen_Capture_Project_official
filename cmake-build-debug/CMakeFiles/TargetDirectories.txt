@@ -1,0 +1,3 @@
+/cygdrive/c/Users/Marco/CLionProjects/Screen_Capture_Project_official/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/cygdrive/c/Users/Marco/CLionProjects/Screen_Capture_Project_official/cmake-build-debug/CMakeFiles/edit_cache.dir
+/cygdrive/c/Users/Marco/CLionProjects/Screen_Capture_Project_official/cmake-build-debug/CMakeFiles/Screen_Capture_Project_official.dir
